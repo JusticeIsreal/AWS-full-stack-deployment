@@ -8,10 +8,26 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import axios from "axios";
 
-function UpdateTaskForm({ isDialogOpen, setIsDialogOpen, task }) {
+function UpdateTaskForm({ isDialogOpen, setIsDialogOpen, task, fetchTasks }) {
   const { id, completed } = task;
   const [taskName, setTaskName] = useState("");
+
+  const handleUpdateTaskName = async () => {
+    try {
+      await axios.put(API_URL, {
+        id,
+        name: taskName,
+        completed,
+      });
+      await fetchTasks();
+
+      setTaskName(" ");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Dialog open={isDialogOpen}>
       <DialogTitle>Edit Task</DialogTitle>
@@ -24,7 +40,8 @@ function UpdateTaskForm({ isDialogOpen, setIsDialogOpen, task }) {
         />
         <Button
           variant="contained"
-          onClick={() => {
+          onClick={async () => {
+            await handleUpdateTaskName();
             setIsDialogOpen(false);
           }}
         >

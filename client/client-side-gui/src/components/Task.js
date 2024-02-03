@@ -4,17 +4,34 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateTaskForm from "./UpdateTaskForm";
 import classnames from "classnames";
-
-function Task({ task }) {
+import axios from "axios";
+import { API_URL } from "../utils.js";
+function Task({ task, fetchTasks }) {
   const { id, name, completed } = task;
   const [isComplete, setIsComplete] = useState(completed);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleUpdateTaskCompletion = () => {
-    setIsComplete((prev) => !prev);
+  const handleUpdateTaskCompletion = async () => {
+    try {
+      await axios.put(API_URL, {
+        id,
+        name,
+        completed: !isComplete,
+      });
+      setIsComplete((prev) => !prev);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleDeleteTask = () => {};
+  const handleDeleteTask = async () => {
+    try {
+      await axios.delete(`${API_URL}/${task.id}`);
+      await fetchTasks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="task">
       <div className={classnames("flex", { done: isComplete })}>
@@ -31,6 +48,7 @@ function Task({ task }) {
       </div>
 
       <UpdateTaskForm
+        fetchTasks={fetchTasks}
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
         task={task}

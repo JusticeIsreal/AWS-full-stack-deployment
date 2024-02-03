@@ -26,7 +26,7 @@ export const fetchTasks = async () => {
 
 
 // Create new task and save to dynomoDB
-const createTasks = async ({ name, completed }) => {
+export const createTasks = async ({ name, completed }) => {
   const uuid = crypto.randomUUID();
   const command = new PutCommand({
     TableName: "Tasks",
@@ -43,7 +43,7 @@ const createTasks = async ({ name, completed }) => {
 
 
 // update task 
-const updateTask = async ({ id, name, completed }) => {
+export const updateTask = async ({ id, name, completed }) => {
   const command = new UpdateCommand({
     TableName: "Task",
     Key: {
@@ -65,7 +65,7 @@ const updateTask = async ({ id, name, completed }) => {
 
 
 // delete task
-const deleteTask = async (id) => {
+export const deleteTask = async (id) => {
   const command = new DeleteCommand({
     TableName: "Task",
     Key: {
@@ -75,3 +75,4 @@ const deleteTask = async (id) => {
   const response = await docClient.send(command);
   return response;
 };
+
